@@ -1,0 +1,28 @@
+[
+  {
+    "alias": "exception.org.springframework.web.bind.MethodArgumentNotValidException",
+    "messages": [
+      {
+        "locale": "ru",
+        "message": "Ошибка валидации поля ''{0}'' со значением ''{1}'' : {2}"
+      },
+      {
+        "locale": "en",
+        "message": "Error validation field ''{0}'' with value ''{1}'' : {2}"
+      }
+    ]
+  },
+  {
+    "alias": "test.message",
+    "messages": [
+      {
+        "locale": "ru",
+        "message": "Тестовое сообщение"
+      },
+      {
+        "locale": "en",
+        "message": "Test message"
+      }
+    ]
+  }
+]
