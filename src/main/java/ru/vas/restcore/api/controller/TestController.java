@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.vas.restcore.api.dto.UserDTO;
-import ru.vas.restcore.db.repo.UserRepository;
+import ru.vas.restcore.db.domain.TestEn;
+import ru.vas.restcore.db.repo.TestEnRepo;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 @RestController
 @RequestMapping("test")
@@ -19,8 +19,8 @@ import java.util.Map;
 @Validated
 public class TestController {
     private final PasswordEncryptor passwordEncryptor;
-    private final UserRepository userRepository;
     private final MessageSource messageSource;
+    private final TestEnRepo repoTest;
 
     @GetMapping("string")
     public ResponseEntity<String> getTestString() {
@@ -43,11 +43,20 @@ public class TestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("json")
-    public ResponseEntity<Map<String, String>> getTestJson() {
-        Map<String, String> map = new HashMap<>();
-        map.put("testKey1", "testValue1");
-        map.put("testKey2", "testValue2");
-        return ResponseEntity.ok(map);
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
+        repoTest.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TestEn>> getTestJson() {
+        final List<TestEn> all = repoTest.findAll();
+        return ResponseEntity.ok(all);
+    }
+
+    @PostMapping
+    public ResponseEntity<TestEn> saveTest(@RequestBody TestEn testEn) {
+        return ResponseEntity.ok(repoTest.save(testEn));
     }
 }
