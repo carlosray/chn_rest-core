@@ -1,6 +1,7 @@
 job:
   script:
-    - docker build -t rest-core-image .
-    - docker-compose up -d
+      - uname -a
+#    - docker build -t rest-core-image .
+#    - docker-compose up -d
   only:
     - master
