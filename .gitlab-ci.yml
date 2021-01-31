@@ -1,0 +1,6 @@
+job:
+  script:
+    - docker build -t my-docker-image .
+    - docker-compose up -d
+  only:
+    - master
