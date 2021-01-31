@@ -14,5 +14,4 @@ EXPOSE 8080
 ENV api.datasource.url=jdbc:postgresql://database-1.cruveyaqgg5i.eu-west-1.rds.amazonaws.com:5432/checker_db
 ENV api.datasource.username=postgres
 ENV api.datasource.password=checker_pass
-ENV spring.flyway.enabled=false
 ENTRYPOINT ["java","-jar","/usr/local/lib/rest-core-1.0.jar"]
