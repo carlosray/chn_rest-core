@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+  backend:
+    container_name: backend
+    image: my-docker-image
+    ports:
+      - 8080:8080
+    restart: "always"
