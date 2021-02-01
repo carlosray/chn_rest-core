@@ -1,5 +1,6 @@
 job:
   script:
     - docker build -t rest-core-image .
+    - "curl -X POST -F token=$TRIGGER_TOKEN -F ref=master https://gitlab.com/api/v4/projects/24046423/trigger/pipeline"
   only:
     - master
