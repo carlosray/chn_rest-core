@@ -11,5 +11,5 @@ up:
   stage: deploy
   script:
     - "curl -X POST -F token=$TRIGGER_TOKEN -F ref=master https://gitlab.com/api/v4/projects/24046423/trigger/pipeline"
-  needs:
-    - ["job"]
+  needs: ["job"]
+  
