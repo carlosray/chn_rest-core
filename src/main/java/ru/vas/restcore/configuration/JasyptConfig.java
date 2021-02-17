@@ -1,7 +1,5 @@
 package ru.vas.restcore.configuration;
 
-import com.ulisesbocchio.jasyptspringboot.annotation.EncryptablePropertySource;
-import com.ulisesbocchio.jasyptspringboot.annotation.EncryptablePropertySources;
 import org.jasypt.digest.config.DigesterConfig;
 import org.jasypt.digest.config.SimpleDigesterConfig;
 import org.jasypt.util.password.ConfigurablePasswordEncryptor;
@@ -11,11 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EncryptablePropertySources(value = {
-        @EncryptablePropertySource("application.properties"),
-        @EncryptablePropertySource("application-dev.properties"),
-        @EncryptablePropertySource("application-prod.properties")
-})
 public class JasyptConfig {
 
     @Bean
