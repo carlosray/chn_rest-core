@@ -13,6 +13,32 @@
     ]
   },
   {
+    "alias": "validation.Pattern.username",
+    "messages": [
+      {
+        "locale": "ru",
+        "message": "Логин не соответствует требованиям"
+      },
+      {
+        "locale": "en",
+        "message": "Login not valid"
+      }
+    ]
+  },
+  {
+    "alias": "validation.Pattern.password",
+    "messages": [
+      {
+        "locale": "ru",
+        "message": "Пароль не соответствует требованиям безопасности"
+      },
+      {
+        "locale": "en",
+        "message": "Password not valid"
+      }
+    ]
+  },
+  {
     "alias": "test.message",
     "messages": [
       {

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.vas.restcore.api.dto.ApiError;
+import ru.vas.restcore.exception.ApiException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
@@ -21,7 +22,12 @@ public class MainExceptionHandler extends BaseExceptionHandler {
         if (AnnotationUtils.findAnnotation(exception.getClass(), ResponseStatus.class) != null) {
             throw exception;
         }
-        return getApiErrorResponse(request, exception, HttpStatus.BAD_REQUEST, true);
+        return getApiErrorResponse(request, exception, HttpStatus.INTERNAL_SERVER_ERROR, true);
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiError> resolveException(HttpServletRequest request, ApiException exception) throws Exception {
+        return getApiErrorResponse(request, exception, exception.getHttpStatus(), true);
     }
 
     // Convert a predefined exception to an HTTP Status code

@@ -1,5 +1,6 @@
 package ru.vas.restcore.db.domain.base;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public abstract class BaseIdEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "ID_GENERATOR")

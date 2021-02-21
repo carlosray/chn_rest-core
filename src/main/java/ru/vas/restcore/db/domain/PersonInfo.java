@@ -8,8 +8,6 @@ import lombok.With;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Past;
-import java.util.Date;
 
 @Data
 @With
@@ -25,11 +23,18 @@ public class PersonInfo {
     @Column(name = "lastName")
     private String lastName;
 
-    @Past
-    @Column(name = "birthDate")
-    private Date birthDate;
+    @Max(255)
+    @Column(name = "company")
+    private String company;
 
     @Max(255)
     @Column(name = "country")
     private String country;
+
+    @Max(255)
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "info", columnDefinition = "TEXT")
+    private String info;
 }

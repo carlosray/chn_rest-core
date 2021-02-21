@@ -6,7 +6,7 @@ import ru.vas.restcore.db.domain.base.BaseTimestampEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"name", "description", "value", "type", "user"})
 @Data
 @With
 @NoArgsConstructor
@@ -24,10 +24,16 @@ public class Subscription extends BaseTimestampEntity {
     @NotBlank
     private String value;
 
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type type;
 
+    @Column(name = "notification", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Notification notification;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User user;
+    private UserEntity user;
 
     public enum Type {
         IP,
@@ -35,8 +41,7 @@ public class Subscription extends BaseTimestampEntity {
     }
 
     public enum Notification {
-        MAIL,
-        TELEGRAM
+        MAIL
     }
 
 }
