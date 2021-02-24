@@ -2,7 +2,7 @@ package ru.vas.restcore.service.impl;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import com.google.common.collect.Sets;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,16 +19,23 @@ import ru.vas.restcore.exception.UsernameAlreadyExists;
 import ru.vas.restcore.jwt.JwtUtils;
 import ru.vas.restcore.service.UserService;
 
-import java.util.Collections;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final Set<RoleEntity> defaultRoles;
+
+    public UserServiceImpl(JwtUtils jwtUtils, UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+        this.jwtUtils = jwtUtils;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        defaultRoles = roleRepository.findByRoleNameIn(Sets.newHashSet("ROLE_USER"));
+    }
 
     @Override
     public JwtTokenDTO login(String username, String password) {
@@ -55,14 +62,9 @@ public class UserServiceImpl implements UserService {
         return new UserEntity()
                 .withUsername(userRegisterDTO.getUsername())
                 .withPassword(passwordEncoder.encode(userRegisterDTO.getPassword()))
+                .withEmail(userRegisterDTO.getEmail())
                 .withPersonInfo(personInfo)
-                .withRoles(roles());
-    }
-
-    private Set<RoleEntity> roles() {
-        return roleRepository.findByRoleName("ROLE_USER")
-                .map(Collections::singleton)
-                .orElse(Collections.emptySet());
+                .withRoles(defaultRoles);
     }
 
     @Override

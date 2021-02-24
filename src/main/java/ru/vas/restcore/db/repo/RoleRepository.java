@@ -4,9 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.vas.restcore.db.domain.RoleEntity;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Set;
 
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
-    Optional<RoleEntity> findByRoleName(String roleName);
+    Set<RoleEntity> findByRoleNameIn(Collection<String> roleNames);
 }

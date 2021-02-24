@@ -3,12 +3,19 @@ package ru.vas.restcore.api.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserRegisterDTO extends UserLoginDTO implements Serializable {
+    @Size(max = 255, message = "{validation.Size.email}")
+    @Email
+    @NotBlank(message = "{validation.NotBlank.email}")
+    private String email;
+
     @Size(max = 255, message = "{validation.Size.firstName}")
     private String firstName;
 

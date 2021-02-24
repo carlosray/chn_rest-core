@@ -19,8 +19,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user",
-        indexes = @Index(name = "IDX_USER_USERNAME", columnList = "username"))
+@Table(name = "user", indexes = {
+        @Index(name = "IDX_USER_USERNAME", columnList = "username"),
+        @Index(name = "IDX_USER_EMAIL", columnList = "email")})
 public class UserEntity extends BaseTimestampEntity implements UserDetails {
     @NotBlank
     @Column(name = "username", unique = true, nullable = false)
@@ -28,6 +29,9 @@ public class UserEntity extends BaseTimestampEntity implements UserDetails {
     @NotBlank
     @Column(name = "password", nullable = false)
     private String password;
+    @NotBlank
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
     @AttributeOverrides({
             @AttributeOverride(name = "firstName", column = @Column(name = "first_name", nullable = false)),

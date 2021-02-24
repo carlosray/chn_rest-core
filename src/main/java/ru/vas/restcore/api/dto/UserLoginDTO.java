@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 @Data
 public class UserLoginDTO implements Serializable {
-    @NotBlank(message = "{validation.NotBlank}")
+    @NotBlank(message = "{validation.NotBlank.username}")
     @Pattern(regexp = "^[a-zA-Z0-9]{8,32}$", message = "{validation.Pattern.username}")
     private String username;
 
-    @NotBlank(message = "{validation.NotBlank}")
+    @NotBlank(message = "{validation.NotBlank.password}")
     @Pattern(regexp = "^[\\w=!#$%&?-]{8,32}$", message = "{validation.Pattern.password}")
     private String password;
 }
