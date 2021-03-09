@@ -4,6 +4,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,7 +33,7 @@ public class MainExceptionHandler extends BaseExceptionHandler {
         return getApiErrorResponse(request, exception, exception.getHttpStatus(), true);
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class, AccessDeniedException.class})
     public ResponseEntity<ApiError> resolveAuthException(HttpServletRequest request, Exception exception) throws Exception {
         return getApiErrorResponse(request, exception, HttpStatus.FORBIDDEN, true);
     }

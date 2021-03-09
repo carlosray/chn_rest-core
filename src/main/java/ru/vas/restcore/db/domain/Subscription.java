@@ -12,7 +12,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "subscription")
+@Table(name = "subscription",
+        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_VALUE_USER", columnNames = {"value", "user_id"}))
 public class Subscription extends BaseTimestampEntity {
     @Column(name = "name", nullable = false)
     private String name;

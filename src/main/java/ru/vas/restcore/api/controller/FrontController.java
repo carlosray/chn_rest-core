@@ -5,13 +5,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.vas.restcore.api.dto.SubscriptionDTO;
 import ru.vas.restcore.api.dto.UserInfoDTO;
-import ru.vas.restcore.db.domain.TestEn;
-import ru.vas.restcore.db.repo.TestEnRepo;
+import ru.vas.restcore.service.SubscriptionService;
 import ru.vas.restcore.service.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Set;
 
 @RequestMapping(
         value = "api",
@@ -20,24 +20,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class FrontController {
-    private final TestEnRepo repoTest;
     private final UserService userService;
+    private final SubscriptionService subscriptionService;
 
     @DeleteMapping("subscription/{id}")
-    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
-        repoTest.deleteById(id);
+    public ResponseEntity<Void> deleteSub(@PathVariable Long id) {
+        subscriptionService.deleteSubById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("subscription")
-    public ResponseEntity<List<TestEn>> getTestJson() throws InterruptedException {
-        final List<TestEn> all = repoTest.findAll();
-        return ResponseEntity.ok(all);
+    public ResponseEntity<Set<SubscriptionDTO>> getSubs() {
+        return ResponseEntity.ok(subscriptionService.getAllSubsCurrentUser());
     }
 
     @PostMapping(value = "subscription", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TestEn> saveTest(@RequestBody TestEn testEn) {
-        return ResponseEntity.ok(repoTest.save(testEn));
+    public ResponseEntity<SubscriptionDTO> saveSub(@Valid @RequestBody SubscriptionDTO sub) {
+        return ResponseEntity.ok(subscriptionService.createNewSub(sub));
     }
 
     @GetMapping("user")

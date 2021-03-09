@@ -1,4 +1,4 @@
-package ru.vas.restcore.configuration;
+package ru.vas.restcore.configuration.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

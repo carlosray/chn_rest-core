@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Table(name = "user", indexes = {
         @Index(name = "IDX_USER_USERNAME", columnList = "username"),
         @Index(name = "IDX_USER_EMAIL", columnList = "email")})
+@ToString(exclude = "subscriptions")
 public class UserEntity extends BaseTimestampEntity implements UserDetails {
     @NotBlank
     @Column(name = "username", unique = true, nullable = false)
