@@ -1,11 +1,11 @@
 package ru.vas.restcore.service;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.vas.restcore.api.dto.JwtTokenDTO;
+import ru.vas.restcore.api.dto.UserInfoDTO;
 import ru.vas.restcore.api.dto.UserRegisterDTO;
 import ru.vas.restcore.db.domain.UserEntity;
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
     /**
      * Проверка логина и пароля, если ок - то выдать jwt токен
      * @param username логин
@@ -20,5 +20,17 @@ public interface UserService extends UserDetailsService {
      * @return true - успешно, false - провал
      */
     UserEntity register(UserRegisterDTO userRegisterDTO);
+
+    /**
+     * Сохранить пользовательское инфо
+     * @param dto инфо
+     */
+    void saveUserInfo(UserInfoDTO dto);
+
+    /**
+     * Получить пользовательское инфо
+     * @return инфо
+     */
+    UserInfoDTO getUserInfo();
 
 }

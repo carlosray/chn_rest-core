@@ -46,7 +46,7 @@ public class UserEntity extends BaseTimestampEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     Set<Subscription> subscriptions = new HashSet<>();
 
-    @ManyToMany(targetEntity = RoleEntity.class)
+    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.LAZY)
     Set<RoleEntity> roles = new HashSet<>();
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import ru.vas.restcore.db.domain.UserEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -45,10 +46,10 @@ public class JwtUtils {
         return Optional.empty();
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserEntity user) {
         return Jwts.builder()
-                .claim(jwtClaimsConfig.getLoginKey(), userDetails.getUsername())
-                .claim(jwtClaimsConfig.getAuthoritiesKey(), userDetails.getAuthorities().stream()
+                .claim(jwtClaimsConfig.getLoginKey(), user.getUsername())
+                .claim(jwtClaimsConfig.getAuthoritiesKey(), user.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.joining(",")))
         .setExpiration(expiration())
@@ -58,7 +59,7 @@ public class JwtUtils {
 
     private Date expiration() {
         return Date.from(LocalDateTime.now()
-                .plus(10,ChronoUnit.MINUTES).atZone(ZoneId.systemDefault()).toInstant());
+                .plus(5,ChronoUnit.DAYS).atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Optional<String> getToken(HttpServletRequest request) {

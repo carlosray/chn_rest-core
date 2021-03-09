@@ -4,6 +4,8 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,6 +30,11 @@ public class MainExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiError> resolveException(HttpServletRequest request, ApiException exception) throws Exception {
         return getApiErrorResponse(request, exception, exception.getHttpStatus(), true);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    public ResponseEntity<ApiError> resolveAuthException(HttpServletRequest request, Exception exception) throws Exception {
+        return getApiErrorResponse(request, exception, HttpStatus.FORBIDDEN, true);
     }
 
     // Convert a predefined exception to an HTTP Status code

@@ -3,34 +3,19 @@ package ru.vas.restcore.api.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserRegisterDTO extends UserLoginDTO implements Serializable {
-    @Size(max = 255, message = "{validation.Size.email}")
-    @Email
-    @NotBlank(message = "{validation.NotBlank.email}")
-    private String email;
+public class UserRegisterDTO extends UserInfoDTO implements Serializable {
+    @NotBlank(message = "{validation.NotBlank.username}")
+    @Pattern(regexp = "^[a-zA-Z0-9]{8,32}$", message = "{validation.Pattern.username}")
+    private String username;
 
-    @Size(max = 255, message = "{validation.Size.firstName}")
-    private String firstName;
-
-    @Size(max = 255, message = "{validation.Size.lastName}")
-    private String lastName;
-
-    @Size(max = 255, message = "{validation.Size.company}")
-    private String company;
-
-    @Size(max = 255, message = "{validation.Size.country}")
-    private String country;
-
-    @Size(max = 255, message = "{validation.Size.city}")
-    private String city;
-
-    private String info;
+    @NotBlank(message = "{validation.NotBlank.password}")
+    @Pattern(regexp = "^[\\w=!#$%&?-]{8,32}$", message = "{validation.Pattern.password}")
+    private String password;
 
 }
