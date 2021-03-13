@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface SubscriptionService {
     Set<SubscriptionDTO> getAllSubs();
-    Set<SubscriptionDTO> getAllSubsCurrentUser();
+    Set<SubscriptionDTO> getAllSubsCurrentUser(Boolean withStatus);
     @PreAuthorize("belongsToTheCurrentUser(#id)")
     void deleteSubById(Long id);
     SubscriptionDTO createNewSub(SubscriptionDTO dto);

@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.http.conn.util.InetAddressUtils;
 import ru.vas.restcore.db.domain.Subscription;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -18,20 +16,27 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class SubscriptionDTO implements Serializable {
+    private Long id;
     @NotBlank
     @Size(max = 255)
     private String name;
     private String description;
     @NotBlank
     private String value;
+    @NotNull
     private Subscription.Type type;
+    @NotNull
     private Subscription.Notification notification;
+    private Boolean status;
 
     public SubscriptionDTO(Subscription subscription) {
+        this.id = subscription.getId();
         this.name = subscription.getName();
         this.description = subscription.getDescription();
         this.value = subscription.getValue();
         this.type = subscription.getType();
         this.notification = subscription.getNotification();
     }
+
+
 }

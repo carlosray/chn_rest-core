@@ -30,8 +30,8 @@ public class FrontController {
     }
 
     @GetMapping("subscription")
-    public ResponseEntity<Set<SubscriptionDTO>> getSubs() {
-        return ResponseEntity.ok(subscriptionService.getAllSubsCurrentUser());
+    public ResponseEntity<Set<SubscriptionDTO>> getSubs(@RequestParam(value = "withStatus", required = false, defaultValue = "false") Boolean withStatus) {
+        return ResponseEntity.ok(subscriptionService.getAllSubsCurrentUser(withStatus));
     }
 
     @PostMapping(value = "subscription", consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -9,12 +9,14 @@ import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 @EnableEurekaClient
 @EnableConfigurationProperties
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @RequiredArgsConstructor
+@EnableFeignClients
 public class RestCoreApplication {
     private final Flyway flyway;
 
