@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtUtils {
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String jwtSecret;
     private final JwtClaimsConfig jwtClaimsConfig;
     private final static String HEADER_PREFIX = "Bearer ";
