@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.vas.restcore.api.dto.CheckStatusDTO;
 import ru.vas.restcore.api.dto.SubscriptionDTO;
 import ru.vas.restcore.db.domain.Subscription;
 import ru.vas.restcore.db.repo.SubscriptionRepository;
@@ -13,9 +14,7 @@ import ru.vas.restcore.service.SecurityService;
 import ru.vas.restcore.service.SubscriptionService;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -44,28 +43,33 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Set<SubscriptionDTO> getAllSubsCurrentUser(Boolean withStatus) {
         final Set<Subscription> subscriptions = securityService.currentUser().getSubscriptions();
 
-        final CompletableFuture<Map<String, Boolean>> statusesTask = CompletableFuture
-                .supplyAsync(() -> withStatus ? this.getStatuses(subscriptions) : new HashMap<String, Boolean>())
+        final CompletableFuture<Set<CheckStatusDTO>> statusesTask = withStatus ? CompletableFuture
+                .supplyAsync(() -> this.getStatuses(subscriptions))
                 .exceptionally(ex -> {
                     log.error("Ошибка при получении статусов от data-service", ex);
-                    return new HashMap<>();
-                });
+                    return new HashSet<>();
+                }) : null;
 
         final Set<SubscriptionDTO> result = subscriptions.stream()
                 .map(SubscriptionDTO::new)
                 .collect(Collectors.toSet());
 
-        if (withStatus) {
-            final Map<String, Boolean> statuses = statusesTask.join();
-            result.forEach(sub -> sub.setStatus(statuses.getOrDefault(sub.getValue(), false)));
-        }
+        Optional.ofNullable(statusesTask)
+                .map(CompletableFuture::join)
+                .ifPresent(statuses -> {
+                    result.forEach(sub -> statuses.stream()
+                            .filter(checkStatusDTO -> checkStatusDTO.getType().equals(sub.getType()))
+                            .filter(checkStatusDTO -> checkStatusDTO.getValue().equals(sub.getValue()))
+                            .findAny()
+                            .ifPresent(checkStatusDTO -> sub.setStatus(checkStatusDTO.getStatus())));
+                });
 
         return result;
     }
 
-    private Map<String, Boolean> getStatuses(Set<Subscription> subscriptions) {
+    private Set<CheckStatusDTO> getStatuses(Set<Subscription> subscriptions) {
         return dataServiceFeign.checkStatus(subscriptions.stream()
-                .map(Subscription::getValue)
+                .map(CheckStatusDTO::new)
                 .collect(Collectors.toSet()));
     }
 
