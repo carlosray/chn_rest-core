@@ -9,13 +9,18 @@ import ru.vas.restcore.db.domain.Subscription;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"value", "type"})
 public class CheckStatusDTO {
     private String value;
     private Subscription.Type type;
     private Boolean status;
 
     public CheckStatusDTO(Subscription subscription) {
+        this.value = subscription.getValue();
+        this.type = subscription.getType();
+    }
+
+    public CheckStatusDTO(SubscriptionDTO subscription) {
         this.value = subscription.getValue();
         this.type = subscription.getType();
     }

@@ -56,13 +56,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         Optional.ofNullable(statusesTask)
                 .map(CompletableFuture::join)
-                .ifPresent(statuses -> {
-                    result.forEach(sub -> statuses.stream()
-                            .filter(checkStatusDTO -> checkStatusDTO.getType().equals(sub.getType()))
-                            .filter(checkStatusDTO -> checkStatusDTO.getValue().equals(sub.getValue()))
-                            .findAny()
-                            .ifPresent(checkStatusDTO -> sub.setStatus(checkStatusDTO.getStatus())));
-                });
+                .ifPresent(statuses -> result.forEach(sub -> sub.setStatus(statuses.contains(new CheckStatusDTO(sub)))));
 
         return result;
     }
@@ -70,7 +64,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private Set<CheckStatusDTO> getStatuses(Set<Subscription> subscriptions) {
         return dataServiceFeign.checkStatus(subscriptions.stream()
                 .map(CheckStatusDTO::new)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet()))
+                .stream()
+                .filter(CheckStatusDTO::getStatus)
+                .collect(Collectors.toSet());
     }
 
     @Override
