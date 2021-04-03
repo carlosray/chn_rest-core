@@ -4,11 +4,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Example;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.vas.restcore.api.dto.CheckStatusDTO;
 import ru.vas.restcore.api.dto.SubscriptionDTO;
 import ru.vas.restcore.db.domain.Subscription;
 import ru.vas.restcore.db.repo.SubscriptionRepository;
+import ru.vas.restcore.exception.ApiException;
+import ru.vas.restcore.exception.MaxCountSubscriptions;
 import ru.vas.restcore.service.DataServiceFeign;
 import ru.vas.restcore.service.SecurityService;
 import ru.vas.restcore.service.SubscriptionService;
@@ -26,6 +32,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SecurityService securityService;
     private final DataServiceFeign dataServiceFeign;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${subs.maximum-count:7}")
+    private long maxSubsCount;
 
     @PostConstruct
     public void postConstruct() {
@@ -77,8 +85,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionDTO createNewSub(SubscriptionDTO dto) {
+        if (this.countSubsCurrentUser() > this.maxSubsCount) {
+            throw new MaxCountSubscriptions();
+        }
         final Subscription subscription = objectMapper.convertValue(dto, Subscription.class);
         subscription.setUser(securityService.currentUser());
         return new SubscriptionDTO(subscriptionRepository.save(subscription));
+    }
+
+    private long countSubsCurrentUser() {
+        return subscriptionRepository.count(Example.of(new Subscription().withUser(securityService.currentUser())));
     }
 }
