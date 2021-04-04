@@ -85,8 +85,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionDTO createNewSub(SubscriptionDTO dto) {
-        if (this.countSubsCurrentUser() > this.maxSubsCount) {
-            throw new MaxCountSubscriptions();
+        if (this.countSubsCurrentUser() + 1 > this.maxSubsCount) {
+            throw new MaxCountSubscriptions(this.maxSubsCount);
         }
         final Subscription subscription = objectMapper.convertValue(dto, Subscription.class);
         subscription.setUser(securityService.currentUser());

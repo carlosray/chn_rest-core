@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 
 public class MaxCountSubscriptions extends ApiException {
 
-    public MaxCountSubscriptions() {
-        super("Нельзя сохранить больше %d мониторингов", HttpStatus.CONFLICT);
+    public MaxCountSubscriptions(long max) {
+        super(String.format("Нельзя сохранить больше %d мониторингов", max), HttpStatus.CONFLICT);
     }
 
 }
