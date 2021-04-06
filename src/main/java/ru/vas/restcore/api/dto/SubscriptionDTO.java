@@ -28,14 +28,22 @@ public class SubscriptionDTO implements Serializable {
     @NotNull
     private Subscription.Notification notification;
     private Boolean status;
+    private UserBaseDTO user;
 
-    public SubscriptionDTO(Subscription subscription) {
+    public SubscriptionDTO(Subscription subscription, boolean withUser) {
         this.id = subscription.getId();
         this.name = subscription.getName();
         this.description = subscription.getDescription();
         this.value = subscription.getValue();
         this.type = subscription.getType();
         this.notification = subscription.getNotification();
+        if (withUser) {
+            this.user = new UserBaseDTO(subscription.getUser());
+        }
+    }
+
+    public SubscriptionDTO(Subscription subscription) {
+        this(subscription, false);
     }
 
 

@@ -70,15 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoDTO getUserInfo() {
         final UserEntity currentUser = securityService.currentUser();
-        return UserInfoDTO.builder()
-                .email(currentUser.getEmail())
-                .firstName(currentUser.getPersonInfo().getFirstName())
-                .lastName(currentUser.getPersonInfo().getLastName())
-                .city(currentUser.getPersonInfo().getCity())
-                .country(currentUser.getPersonInfo().getCountry())
-                .company(currentUser.getPersonInfo().getCompany())
-                .info(currentUser.getPersonInfo().getInfo())
-                .build();
+        return new UserInfoDTO(currentUser);
     }
 
     private UserEntity parseRegisterDTO(UserRegisterDTO userRegisterDTO) {

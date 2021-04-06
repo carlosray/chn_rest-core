@@ -1,34 +1,15 @@
 package ru.vas.restcore.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import ru.vas.restcore.db.domain.UserEntity;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoDTO implements Serializable {
-    @Size(max = 255, message = "{validation.Size.email}")
-    @Email
-    @NotBlank(message = "{validation.NotBlank.email}")
-    private String email;
-
-    @Size(max = 255, message = "{validation.Size.firstName}")
-    @NotBlank(message = "{validation.NotBlank.firstName}")
-    private String firstName;
-
-    @Size(max = 255, message = "{validation.Size.lastName}")
-    @NotBlank(message = "{validation.NotBlank.lastName}")
-    private String lastName;
-
+public class UserInfoDTO extends UserBaseDTO {
     @Size(max = 255, message = "{validation.Size.company}")
     private String company;
 
@@ -39,4 +20,12 @@ public class UserInfoDTO implements Serializable {
     private String city;
 
     private String info;
+
+    public UserInfoDTO(UserEntity userEntity) {
+        super(userEntity);
+        this.city = userEntity.getPersonInfo().getCity();
+        this.country = userEntity.getPersonInfo().getCountry();
+        this.company = userEntity.getPersonInfo().getCompany();
+        this.info = userEntity.getPersonInfo().getInfo();
+    }
 }

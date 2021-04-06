@@ -42,7 +42,8 @@ public class Subscription extends BaseTimestampEntity {
     }
 
     public enum Notification {
-        MAIL
+        MAIL,
+        NONE
     }
 
 }

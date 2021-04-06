@@ -6,22 +6,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import ru.vas.restcore.api.dto.CheckStatusDTO;
 import ru.vas.restcore.api.dto.SubscriptionDTO;
 import ru.vas.restcore.db.domain.Subscription;
 import ru.vas.restcore.db.repo.SubscriptionRepository;
-import ru.vas.restcore.exception.ApiException;
 import ru.vas.restcore.exception.MaxCountSubscriptions;
-import ru.vas.restcore.service.DataServiceFeign;
+import ru.vas.restcore.service.NotificationServiceClient;
 import ru.vas.restcore.service.SecurityService;
 import ru.vas.restcore.service.SubscriptionService;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,7 +25,7 @@ import java.util.stream.Collectors;
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final SecurityService securityService;
-    private final DataServiceFeign dataServiceFeign;
+    private final NotificationServiceClient notificationServiceClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Value("${subs.maximum-count:7}")
     private long maxSubsCount;
@@ -49,33 +44,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Set<SubscriptionDTO> getAllSubsCurrentUser(Boolean withStatus) {
-        final Set<Subscription> subscriptions = securityService.currentUser().getSubscriptions();
-
-        final CompletableFuture<Set<CheckStatusDTO>> statusesTask = withStatus ? CompletableFuture
-                .supplyAsync(() -> this.getStatuses(subscriptions))
-                .exceptionally(ex -> {
-                    log.error("Ошибка при получении статусов от data-service", ex);
-                    return new HashSet<>();
-                }) : null;
-
-        final Set<SubscriptionDTO> result = subscriptions.stream()
+        final Set<SubscriptionDTO> subs = securityService.currentUser().getSubscriptions().stream()
                 .map(SubscriptionDTO::new)
                 .collect(Collectors.toSet());
-
-        Optional.ofNullable(statusesTask)
-                .map(CompletableFuture::join)
-                .ifPresent(statuses -> result.forEach(sub -> sub.setStatus(statuses.contains(new CheckStatusDTO(sub)))));
-
-        return result;
-    }
-
-    private Set<CheckStatusDTO> getStatuses(Set<Subscription> subscriptions) {
-        return dataServiceFeign.checkStatus(subscriptions.stream()
-                .map(CheckStatusDTO::new)
-                .collect(Collectors.toSet()))
-                .stream()
-                .filter(CheckStatusDTO::getStatus)
-                .collect(Collectors.toSet());
+        return withStatus ? notificationServiceClient.checkStatus(subs) : subs;
     }
 
     @Override
