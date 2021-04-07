@@ -38,7 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Set<SubscriptionDTO> getAllSubs() {
         return subscriptionRepository.findAll().stream()
-                .map(SubscriptionDTO::new)
+                .map(subscription -> new SubscriptionDTO(subscription, true))
                 .collect(Collectors.toSet());
     }
 
